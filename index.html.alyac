@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VoyageLuxe - Global Travel & Premium Bookings</title>
+  <meta name="description" content="Discover and book luxury travel destinations worldwide with VoyageLuxe. Experience seamless booking and unforgettable journeys.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Modular Header -->
+  <site-header></site-header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <img src="/images/hero.png" alt="Beautiful coastal city at sunset" class="hero-bg" loading="lazy">
+      <div class="hero-overlay"></div>
+      <div class="container hero-content animate-fade-in">
+        <h1>당신의 다음 특별한 여정을 발견하세요</h1>
+        <p>엄선된 프리미엄 여행 경험으로 숨 막히게 아름다운 목적지를 탐험해 보세요.</p>
+        
+        <!-- Integrated Search Bar -->
+        <div class="search-widget" id="mainSearch">
+          <div class="input-group">
+            <label class="input-label" for="destination">목적지 (예: 파리, 발리, 도쿄)</label>
+            <input type="text" id="destination" class="input-field" placeholder="어디로 떠나시나요?">
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="date">일정</label>
+            <input type="date" id="date" class="input-field">
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="guests">인원수</label>
+            <select id="guests" class="input-field">
+              <option value="1">1명 (성인 1)</option>
+              <option value="2" selected>2명 (성인 2)</option>
+              <option value="3">3명 (가족)</option>
+              <option value="4">4명+ (단체)</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="handleSearch()">검색</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Popular Destinations -->
+    <section class="section" style="background-color: var(--color-bg);">
+      <div class="container">
+        <h2 class="section-title">이번 주 인기 여행지</h2>
+        <div id="popular-grid" class="grid grid-cols-3">
+          <!-- Dynamic Content from API will be rendered here -->
+          <p style="text-align: center; grid-column: span 3; color: var(--color-text-muted);">데이터를 불러오는 중입니다...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Themed Travel -->
+    <section class="section" style="background-color: white;">
+      <div class="container">
+        <div class="d-flex justify-between align-center" style="margin-bottom: var(--spacing-8);">
+          <h2>테마별 여행</h2>
+          <a href="explore.html" style="color: var(--color-primary); font-weight: 600;">전체 보기 &rarr;</a>
+        </div>
+        <div class="grid grid-cols-4">
+          <a href="explore.html?theme=휴양" class="tour-card" style="aspect-ratio: 1; justify-content: center; align-items: center; background: linear-gradient(135deg, var(--color-primary), var(--color-navy)); color: white; text-align: center;">
+            <h3 style="color: white; margin-bottom: 0.5rem;">휴양</h3>
+            <p style="opacity: 0.8; font-size: 0.875rem;">12+ 여행지</p>
+          </a>
+          <a href="explore.html?theme=액티비티" class="tour-card" style="aspect-ratio: 1; justify-content: center; align-items: center; background: linear-gradient(135deg, #10b981, #065f46); color: white; text-align: center;">
+            <h3 style="color: white; margin-bottom: 0.5rem;">액티비티</h3>
+            <p style="opacity: 0.8; font-size: 0.875rem;">8 여행지</p>
+          </a>
+          <a href="explore.html?theme=가족여행" class="tour-card" style="aspect-ratio: 1; justify-content: center; align-items: center; background: linear-gradient(135deg, #f59e0b, #b45309); color: white; text-align: center;">
+            <h3 style="color: white; margin-bottom: 0.5rem;">가족여행</h3>
+            <p style="opacity: 0.8; font-size: 0.875rem;">24+ 여행지</p>
+          </a>
+          <a href="explore.html?theme=로맨스" class="tour-card" style="aspect-ratio: 1; justify-content: center; align-items: center; background: linear-gradient(135deg, #ec4899, #be185d); color: white; text-align: center;">
+            <h3 style="color: white; margin-bottom: 0.5rem;">로맨스</h3>
+            <p style="opacity: 0.8; font-size: 0.875rem;">15 여행지</p>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modular Footer -->
+  <site-footer></site-footer>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    function handleSearch() {
+      const dest = document.getElementById('destination').value;
+      const url = new URL('explore.html', window.location.href);
+      if (dest) {
+        url.searchParams.set('query', dest);
+      }
+      window.location.href = url.toString();
+    }
+
+    // Dynamic Data Binding for Popular Destinations
+    document.addEventListener('DOMContentLoaded', async () => {
+      const grid = document.getElementById('popular-grid');
+      // Using normal destinations for Popular list to keep it uniform (not special offers)
+      const destinations = await window.API.getDestinations({ isSpecialOffer: false });
+      const popular = destinations.slice(0, 3);
+      
+      grid.innerHTML = popular.map(d => `
+        <tour-card
+          image="${d.image}"
+          title="${d.title}"
+          desc="${d.desc}"
+          price="₩${d.price.toLocaleString()}"
+          original-price="${d.originalPrice ? '₩'+d.originalPrice.toLocaleString() : ''}"
+          discount="${d.discount || ''}"
+          rating="${d.rating}"
+          duration="${d.duration}일"
+          link="${d.link}?id=${d.id}"
+        ></tour-card>
+      `).join('');
+    });
+  </script>
+</body>
+</html>
