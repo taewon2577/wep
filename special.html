@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>특가 상품 방출! - VoyageLuxe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body style="background-color: var(--color-bg);">
+
+  <site-header></site-header>
+
+  <main style="padding: var(--spacing-8) 0;">
+    <div class="container">
+      
+      <div style="background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; padding: var(--spacing-8); border-radius: var(--border-radius-xl); margin-bottom: var(--spacing-8); display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-md);">
+        <div>
+          <h1 style="color: white; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">🔥 타임 세일 특가 방출!</h1>
+          <p style="opacity: 0.9; font-size: 1.125rem;">놓치면 후회할 최대 30% 한정 특가 라인업을 만나보세요.</p>
+        </div>
+        <div style="font-size: 3rem; font-weight: 800; opacity: 0.2;">
+          SALE
+        </div>
+      </div>
+
+      <div class="d-flex justify-between align-center" style="margin-bottom: var(--spacing-6);">
+        <h2 id="pageTitle" style="color: #b91c1c;">특가 리스트</h2>
+        <div class="d-flex gap-4 align-center">
+          <label style="font-weight: 600; font-size: 0.875rem;">정렬 기준:</label>
+          <select id="sortSelect" class="input-field" style="padding: 0.5rem; min-width: 150px;" onchange="applyFilters()">
+            <option value="">추천순</option>
+            <option value="price_asc">가격 낮은 순</option>
+            <option value="price_desc">가격 높은 순</option>
+            <option value="rating">평점순</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="explore-layout" style="grid-template-columns: 1fr;">
+        <!-- Results Grid -->
+        <div id="results-grid" class="grid grid-cols-4">
+          <p style="grid-column: span 4; text-align: center; color: var(--color-text-muted);">특가 상품을 불러오는 중입니다...</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <site-footer></site-footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      applyFilters();
+    });
+
+    async function applyFilters() {
+      const grid = document.getElementById('results-grid');
+      grid.innerHTML = '<p style="grid-column: span 4; text-align: center; color: var(--color-text-muted);">로딩 중...</p>';
+      
+      const sort = document.getElementById('sortSelect').value;
+
+      const filters = {
+        isSpecialOffer: true, // Only fetch special items
+        sort: sort
+      };
+
+      const destinations = await window.API.getDestinations(filters);
+      
+      if (destinations.length === 0) {
+        grid.innerHTML = '<p style="grid-column: span 4; text-align: center; color: var(--color-text-muted);">현재 진행 중인 특가 상품이 없습니다.</p>';
+        return;
+      }
+
+      grid.innerHTML = destinations.map(d => `
+        <tour-card
+          image="${d.image}"
+          title="${d.title}"
+          desc="${d.desc}"
+          price="₩${d.price.toLocaleString()}"
+          original-price="${d.originalPrice ? '₩'+d.originalPrice.toLocaleString() : ''}"
+          discount="${d.discount || ''}"
+          rating="${d.rating}"
+          duration="${d.duration}일"
+          link="${d.link}?id=${d.id}"
+        ></tour-card>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

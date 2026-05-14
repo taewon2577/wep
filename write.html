@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>고객 문의 - VoyageLuxe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .write-form {
+      background: var(--color-surface);
+      padding: var(--spacing-8);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+  </style>
+</head>
+<body style="background-color: var(--color-bg);">
+
+  <site-header></site-header>
+
+  <main style="padding: var(--spacing-8) 0;">
+    <div class="container animate-fade-in" style="max-width: 800px;">
+      <h1 style="margin-bottom: var(--spacing-8);">1:1 고객 문의 작성</h1>
+
+      <div class="write-form">
+        <form id="postForm" onsubmit="submitPost(event)">
+          
+          <div class="grid grid-cols-2" style="gap: var(--spacing-4); margin-bottom: var(--spacing-4);">
+            <div class="input-group">
+              <label class="input-label" for="postCategory">분류 선택</label>
+              <select id="postCategory" class="input-field" required>
+                <option value="예약 문의">예약 문의</option>
+                <option value="결제 문의">결제 문의</option>
+                <option value="취소 및 환불">취소 및 환불</option>
+                <option value="기타">기타</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label class="input-label" for="bookingNumber">예약 번호 (선택)</label>
+              <input type="text" id="bookingNumber" class="input-field" placeholder="예: BK-12345">
+            </div>
+          </div>
+
+          <div class="input-group" style="margin-bottom: var(--spacing-4);">
+            <label class="input-label" for="postTitle">제목</label>
+            <input type="text" id="postTitle" class="input-field" placeholder="문의 제목을 입력하세요" required>
+          </div>
+          
+          <div class="input-group" style="margin-bottom: var(--spacing-4);">
+            <label class="input-label" for="postAuthor">작성자</label>
+            <input type="text" id="postAuthor" class="input-field" placeholder="이름 또는 닉네임" required>
+          </div>
+
+          <!-- Secret Options -->
+          <div class="input-group" style="margin-bottom: var(--spacing-6); padding: var(--spacing-4); background-color: var(--color-bg); border-radius: var(--border-radius);">
+            <label class="checkbox-label" style="font-weight: 600; margin-bottom: 0.5rem;">
+              <input type="checkbox" id="postSecret" onchange="togglePassword()"> 🔒 비밀글로 설정 (개인정보 보호)
+            </label>
+            <div id="passwordArea" style="display: none; margin-top: 0.5rem;">
+              <input type="password" id="postPassword" class="input-field" placeholder="비밀번호 (4자리 이상)" style="max-width: 200px;">
+            </div>
+          </div>
+
+          <div class="input-group" style="margin-bottom: var(--spacing-8);">
+            <label class="input-label" for="postContent">문의 내용</label>
+            <textarea id="postContent" class="input-field" rows="10" placeholder="궁금하신 점을 상세히 적어주세요. 신속하게 답변 드리겠습니다." required></textarea>
+          </div>
+
+          <div class="d-flex gap-4 justify-between">
+            <button type="button" class="btn btn-outline" onclick="history.back()">취소</button>
+            <button type="submit" class="btn btn-primary" style="padding: 0 3rem;">등록하기</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <site-footer></site-footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    function togglePassword() {
+      const isSecret = document.getElementById('postSecret').checked;
+      const pwArea = document.getElementById('passwordArea');
+      const pwInput = document.getElementById('postPassword');
+      if (isSecret) {
+        pwArea.style.display = 'block';
+        pwInput.required = true;
+      } else {
+        pwArea.style.display = 'none';
+        pwInput.required = false;
+        pwInput.value = '';
+      }
+    }
+
+    async function submitPost(event) {
+      event.preventDefault();
+      
+      const category = document.getElementById('postCategory').value;
+      const bookingNumber = document.getElementById('bookingNumber').value;
+      const title = document.getElementById('postTitle').value;
+      const author = document.getElementById('postAuthor').value;
+      const content = document.getElementById('postContent').value;
+      const isSecret = document.getElementById('postSecret').checked;
+      const password = document.getElementById('postPassword').value;
+
+      const submitBtn = document.querySelector('button[type="submit"]');
+      submitBtn.innerText = "등록 중...";
+      submitBtn.disabled = true;
+
+      const newId = await window.API.createPost({
+        category, title, author, content, bookingNumber, isSecret, password
+      });
+      
+      // Redirect to post detail (we'll automatically view it)
+      // Since they just created it, we can pass their password safely to view if it's secret.
+      window.location.href = `post.html?id=${newId}`;
+    }
+  </script>
+</body>
+</html>

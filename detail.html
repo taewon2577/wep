@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>여행 상세 - VoyageLuxe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body style="background-color: var(--color-bg);">
+
+  <site-header></site-header>
+
+  <main style="padding: var(--spacing-8) 0;">
+    <div id="detail-container" class="container animate-fade-in" style="display: none;">
+      
+      <!-- Top header area -->
+      <div class="d-flex justify-between align-center" style="margin-bottom: var(--spacing-4);">
+        <div>
+          <div class="d-flex align-center gap-2" style="font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: 0.5rem;" id="loc-breadcrumbs">
+          </div>
+          <h1 id="page-title"></h1>
+        </div>
+        <div class="d-flex align-center gap-4">
+          <div style="text-align: right;">
+            <div style="color: #fbbf24; font-size: 1.25rem; font-weight: 700;" id="page-rating"></div>
+            <div style="font-size: 0.875rem; color: var(--color-text-muted);" id="page-reviews"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Gallery -->
+      <section class="gallery-section">
+        <div class="gallery-main">
+          <img src="" alt="Main View" class="gallery-img" id="img-main">
+        </div>
+        <div class="gallery-sub">
+          <img src="" alt="Sub View 1" class="gallery-img" id="img-sub1">
+          <img src="" alt="Sub View 2" class="gallery-img" id="img-sub2">
+        </div>
+      </section>
+
+      <!-- Content & Booking Layout -->
+      <div class="detail-layout">
+        
+        <!-- Left Side: Tabs -->
+        <div class="content-area">
+          <ul class="tab-nav">
+            <li><button class="tab-btn active" data-target="tab-itinerary">일정표</button></li>
+            <li><button class="tab-btn" data-target="tab-inclusions">포함/불포함 사항</button></li>
+            <li><button class="tab-btn" data-target="tab-policy">취소 규정</button></li>
+          </ul>
+
+          <div id="tab-itinerary" class="tab-content active">
+            <h3 style="margin-bottom: var(--spacing-4);">당신을 기다리는 여정</h3>
+            <p style="color: var(--color-navy); font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;" id="page-desc"></p>
+            <p style="color: var(--color-text-muted); line-height: 1.8; margin-bottom: var(--spacing-6);" id="page-intro"></p>
+            
+            <div style="margin-left: 1rem; border-left: 2px solid var(--color-border); padding-left: 1.5rem;" id="itinerary-list">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <div id="tab-inclusions" class="tab-content">
+            <h3 style="margin-bottom: var(--spacing-4);">포함 사항</h3>
+            <ul style="color: var(--color-text-muted); padding-left: 1.5rem; list-style-type: disc; margin-bottom: var(--spacing-6); line-height: 2;" id="inc-list">
+            </ul>
+
+            <h3 style="margin-bottom: var(--spacing-4);">불포함 사항</h3>
+            <ul style="color: var(--color-text-muted); padding-left: 1.5rem; list-style-type: disc; line-height: 2;" id="exc-list">
+            </ul>
+          </div>
+
+          <div id="tab-policy" class="tab-content">
+            <h3 style="margin-bottom: var(--spacing-4);">취소 규정</h3>
+            <div style="background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: var(--spacing-4); border-radius: 0 var(--border-radius) var(--border-radius) 0; color: #7f1d1d; margin-bottom: var(--spacing-4);">
+              <strong>엄격:</strong> 예약 후 48시간 이내에는 무료 취소가 가능합니다.
+            </div>
+            <p style="color: var(--color-text-muted); line-height: 1.8;">
+              - 체크인 30일 전까지 취소 시 수수료를 제외한 전액이 환불됩니다.<br>
+              - 체크인일 기준 30일 이내에 취소 시 환불이 불가합니다.<br>
+              - 천재지변이나 항공편 결항 등의 사유로 방문이 불가할 경우, 18개월간 유효한 트래블 크레딧이 제공됩니다.
+            </p>
+          </div>
+        </div>
+
+        <!-- Right Side: Booking Widget -->
+        <aside class="booking-widget">
+          <div class="booking-price" style="display:flex; flex-direction:column; gap:0.25rem;">
+            <span id="price-original" style="font-size: 1rem; color: var(--color-text-muted); text-decoration: line-through; display:none;"></span>
+            <div><span id="price-current" style="color: #ef4444;"></span> <span style="font-size: 1rem; color: var(--color-text-muted); font-weight:400;">/ 인</span></div>
+          </div>
+          
+          <div style="border: 1px solid var(--color-border); border-radius: var(--border-radius); margin-bottom: var(--spacing-4);">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--color-border);">
+              <div style="padding: 0.75rem; border-right: 1px solid var(--color-border);">
+                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">체크인</div>
+                <input type="date" style="border: none; width: 100%; outline: none; margin-top: 0.25rem;">
+              </div>
+              <div style="padding: 0.75rem;">
+                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">체크아웃</div>
+                <input type="date" style="border: none; width: 100%; outline: none; margin-top: 0.25rem;">
+              </div>
+            </div>
+            <div style="padding: 0.75rem;">
+              <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">인원</div>
+              <select style="border: none; width: 100%; outline: none; margin-top: 0.25rem;" id="guest-count" onchange="updateTotal()">
+                <option value="1">1명 (성인 1)</option>
+                <option value="2" selected>2명 (성인 2)</option>
+                <option value="3">3명 (가족)</option>
+                <option value="4">4명+ (단체)</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-block" style="margin-bottom: var(--spacing-4); font-size: 1.125rem;" onclick="alert('예약이 진행됩니다.')">예약하기</button>
+          <div style="text-align: center; font-size: 0.875rem; color: var(--color-text-muted);">
+            아직 결제되지 않습니다.
+          </div>
+          
+          <div style="margin-top: var(--spacing-6); padding-top: var(--spacing-4); border-top: 1px solid var(--color-border);">
+            <div class="d-flex justify-between" style="margin-bottom: 0.5rem; color: var(--color-text-muted);">
+              <span id="calc-text"></span>
+              <span id="calc-base"></span>
+            </div>
+            <div class="d-flex justify-between" style="margin-bottom: 0.5rem; color: var(--color-text-muted);">
+              <span>서비스 수수료</span>
+              <span>₩150,000</span>
+            </div>
+            <div class="d-flex justify-between" style="margin-top: 1rem; font-weight: 700; font-size: 1.25rem; color: var(--color-navy);">
+              <span>총 합계</span>
+              <span id="calc-total"></span>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+    
+    <div id="loading" style="text-align:center; padding:5rem; color:var(--color-text-muted);">
+      상품 정보를 불러오는 중입니다...
+    </div>
+  </main>
+
+  <site-footer></site-footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    let currentItem = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      
+      if (!id) {
+        alert("잘못된 접근입니다.");
+        window.location.href = "index.html";
+        return;
+      }
+
+      currentItem = await window.API.getDestinationById(id);
+      
+      if (!currentItem) {
+        alert("존재하지 않는 상품입니다.");
+        window.location.href = "index.html";
+        return;
+      }
+
+      renderUI();
+    });
+
+    function renderUI() {
+      // Hide loader
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('detail-container').style.display = 'block';
+
+      // Title, Breadcrumbs & Dynamic SEO
+      document.title = currentItem.title + " - VoyageLuxe";
+      
+      const createMeta = (prop, content) => {
+        let meta = document.querySelector(`meta[property="${prop}"]`);
+        if (!meta) { meta = document.createElement('meta'); meta.setAttribute('property', prop); document.head.appendChild(meta); }
+        meta.setAttribute('content', content);
+      };
+      createMeta('og:title', currentItem.title);
+      createMeta('og:description', currentItem.desc);
+      createMeta('og:image', currentItem.mainImage);
+
+      document.getElementById('page-title').innerText = currentItem.title;
+      document.getElementById('page-desc').innerText = currentItem.desc;
+      document.getElementById('page-intro').innerText = currentItem.intro;
+      document.getElementById('page-rating').innerText = `★ ${currentItem.rating}`;
+      document.getElementById('page-reviews').innerText = `${currentItem.reviews}개 리뷰`;
+      
+      const locs = currentItem.location.split(' > ');
+      document.getElementById('loc-breadcrumbs').innerHTML = locs.map(l => `<span>${l}</span>`).join(' &gt; ');
+
+      // Images
+      document.getElementById('img-main').src = currentItem.mainImage;
+      if (currentItem.gallery && currentItem.gallery.length >= 2) {
+        document.getElementById('img-sub1').src = currentItem.gallery[0];
+        document.getElementById('img-sub2').src = currentItem.gallery[1];
+      }
+
+      // Sidebar Prices
+      document.getElementById('price-current').style.color = currentItem.isSpecialOffer ? '#ef4444' : 'var(--color-navy)';
+      document.getElementById('price-current').innerText = `₩${currentItem.price.toLocaleString()}`;
+      if (currentItem.isSpecialOffer && currentItem.originalPrice) {
+        document.getElementById('price-original').innerText = `₩${currentItem.originalPrice.toLocaleString()}`;
+        document.getElementById('price-original').style.display = 'block';
+      }
+
+      // Itinerary Render
+      const itiHTML = currentItem.itinerary.map((it, idx) => {
+        const isLast = idx === currentItem.itinerary.length - 1;
+        return `
+          <div style="position: relative; margin-bottom: ${isLast ? '0' : '2rem'};">
+            <div style="position: absolute; left: -1.8rem; top: 0.2rem; width: 12px; height: 12px; border-radius: 50%; background: ${idx === 0 ? 'var(--color-primary)' : 'var(--color-border)'};"></div>
+            <h4 style="margin-bottom: 0.5rem; color: ${idx === 0 ? 'var(--color-primary)' : 'inherit'};">${it.day}: ${it.title}</h4>
+            <p style="color: var(--color-text-muted);">${it.desc}</p>
+          </div>
+        `;
+      }).join('');
+      document.getElementById('itinerary-list').innerHTML = itiHTML;
+
+      // Inclusions / Exclusions
+      document.getElementById('inc-list').innerHTML = currentItem.inclusions.map(i => `<li>${i}</li>`).join('');
+      document.getElementById('exc-list').innerHTML = currentItem.exclusions.map(i => `<li>${i}</li>`).join('');
+
+      updateTotal();
+    }
+
+    function updateTotal() {
+      if(!currentItem) return;
+      const guests = parseInt(document.getElementById('guest-count').value);
+      const baseTotal = currentItem.price * guests;
+      const fee = 150000;
+
+      document.getElementById('calc-text').innerText = `₩${currentItem.price.toLocaleString()} x ${guests}명`;
+      document.getElementById('calc-base').innerText = `₩${baseTotal.toLocaleString()}`;
+      document.getElementById('calc-total').innerText = `₩${(baseTotal + fee).toLocaleString()}`;
+    }
+  </script>
+</body>
+</html>

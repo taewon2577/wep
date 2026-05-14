@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>고객 문의 - VoyageLuxe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .post-container {
+      background: var(--color-surface);
+      padding: var(--spacing-8);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+    .post-header {
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: var(--spacing-4);
+      margin-bottom: var(--spacing-6);
+    }
+    .badge-label {
+      background: #f1f5f9;
+      color: #475569;
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--border-radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    .post-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-4);
+      color: var(--color-text-muted);
+      font-size: 0.875rem;
+      margin-top: var(--spacing-4);
+    }
+    .post-content {
+      min-height: 150px;
+      line-height: 1.8;
+      font-size: 1.05rem;
+      white-space: pre-wrap; 
+      margin-bottom: var(--spacing-8);
+    }
+    .reply-area {
+      background: #f8fafc;
+      border-left: 4px solid var(--color-primary);
+      padding: var(--spacing-6);
+      border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
+      margin-top: var(--spacing-6);
+    }
+    .reply-header {
+      font-weight: 700;
+      color: var(--color-navy);
+      margin-bottom: var(--spacing-2);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .password-modal {
+      text-align: center;
+      padding: var(--spacing-8);
+      background: var(--color-surface);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-sm);
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .admin-reply-form {
+      margin-top: var(--spacing-8);
+      padding-top: var(--spacing-6);
+      border-top: 1px dashed var(--color-border);
+    }
+  </style>
+</head>
+<body style="background-color: var(--color-bg);">
+
+  <site-header></site-header>
+
+  <main style="padding: var(--spacing-8) 0;">
+    <div class="container animate-fade-in" style="max-width: 800px;">
+      
+      <!-- Password Prompt Area -->
+      <div id="passwordPrompt" class="password-modal" style="display: none;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+        <h2 style="margin-bottom: var(--spacing-2);">비밀글입니다</h2>
+        <p style="color: var(--color-text-muted); margin-bottom: var(--spacing-6);">게시글을 보려면 비밀번호를 입력해주세요.</p>
+        <form onsubmit="handlePasswordSubmit(event)">
+          <input type="password" id="inputPassword" class="input-field" placeholder="비밀번호" style="width: 100%; margin-bottom: 1rem;" required>
+          <div style="color: #ef4444; font-size: 0.875rem; margin-bottom: 1rem; display: none;" id="pwError">비밀번호가 일치하지 않습니다.</div>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline" style="flex: 1;" onclick="history.back()">뒤로가기</button>
+            <button type="submit" class="btn btn-primary" style="flex: 1;">확인</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Post Area -->
+      <div id="postArea" class="post-container" style="display: none;">
+        <div class="post-header">
+          <div style="margin-bottom: var(--spacing-2);">
+            <span id="postCategory" class="badge-label"></span>
+            <span id="postBookingLabel" class="badge-label" style="display:none; background: #e0f2fe; color: #0284c7;"></span>
+          </div>
+          <h1 id="postTitle"></h1>
+          <div class="post-meta">
+            <span id="postAuthor" style="font-weight: 600; color: var(--color-navy);"></span>
+            <span id="postDate"></span>
+            <span id="postViews"></span>
+            <span id="postStatus" style="font-weight: 700; color: #10b981;"></span>
+          </div>
+        </div>
+        
+        <div id="postBody" class="post-content"></div>
+        
+        <!-- Reply View -->
+        <div id="replyView" class="reply-area" style="display: none;">
+          <div class="reply-header">
+            <span>🛡️</span> VoyageLuxe 고객센터의 답변
+          </div>
+          <div id="replyBody" style="white-space: pre-wrap; color: var(--color-navy-light);"></div>
+        </div>
+
+        <!-- Admin Reply Form -->
+        <div id="adminReplyForm" class="admin-reply-form" style="display: none;">
+          <h3 style="margin-bottom: var(--spacing-4); color: var(--color-primary);">[관리자 전용] 답변 작성</h3>
+          <textarea id="replyText" class="input-field" rows="5" placeholder="답변 내용을 입력하세요..." style="margin-bottom: 1rem;"></textarea>
+          <button class="btn btn-primary" onclick="submitReply()">답변 등록</button>
+        </div>
+        
+        <div class="d-flex justify-center" style="margin-top: var(--spacing-8); padding-top: var(--spacing-6); border-top: 1px solid var(--color-border);">
+          <button class="btn btn-outline" onclick="window.location.href='community.html'">목록으로 돌아가기</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <site-footer></site-footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const postId = params.get('id');
+    const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+
+    async function tryLoadPost(password = "") {
+      try {
+        const post = await window.API.getPostById(postId, password, isAdmin);
+        if (!post) {
+          alert("존재하지 않거나 삭제된 게시물입니다.");
+          window.location.href = 'community.html';
+          return;
+        }
+
+        renderPost(post);
+      } catch (err) {
+        if (err.message === 'UNAUTHORIZED') {
+          // Show password prompt
+          document.getElementById('postArea').style.display = 'none';
+          document.getElementById('passwordPrompt').style.display = 'block';
+          if (password !== '') {
+            document.getElementById('pwError').style.display = 'block';
+          }
+        }
+      }
+    }
+
+    function handlePasswordSubmit(e) {
+      e.preventDefault();
+      const pw = document.getElementById('inputPassword').value;
+      tryLoadPost(pw);
+    }
+
+    function renderPost(post) {
+      document.getElementById('passwordPrompt').style.display = 'none';
+      document.getElementById('postArea').style.display = 'block';
+
+      document.title = post.title + ' - VoyageLuxe';
+      
+      document.getElementById('postCategory').innerText = post.category;
+      if (post.bookingNumber) {
+        const bl = document.getElementById('postBookingLabel');
+        bl.innerText = `예약번호: ${post.bookingNumber}`;
+        bl.style.display = 'inline-block';
+      }
+
+      document.getElementById('postTitle').innerText = (post.isSecret && !isAdmin ? '🔒 ' : '') + post.title;
+      document.getElementById('postAuthor').innerText = `👤 ${post.author}`;
+      document.getElementById('postDate').innerText = `📅 ${post.date}`;
+      document.getElementById('postViews').innerText = `👀 조회수: ${post.views}`;
+      
+      const st = document.getElementById('postStatus');
+      st.innerText = post.status;
+      st.style.color = post.status === '답변 완료' ? '#10b981' : '#f59e0b';
+
+      document.getElementById('postBody').innerText = post.content;
+
+      // Handle reply display
+      if (post.reply && post.reply.trim() !== '') {
+        document.getElementById('replyView').style.display = 'block';
+        document.getElementById('replyBody').innerText = post.reply;
+      }
+
+      // Handle admin logic
+      if (isAdmin && post.status !== '답변 완료') {
+        document.getElementById('adminReplyForm').style.display = 'block';
+      } else {
+        document.getElementById('adminReplyForm').style.display = 'none';
+      }
+    }
+
+    async function submitReply() {
+      const text = document.getElementById('replyText').value;
+      if (!text.trim()) {
+        alert("답변 내용을 입력해주세요."); return;
+      }
+      const success = await window.API.addReply(postId, text);
+      if (success) {
+        alert("답변이 성공적으로 등록되었습니다.");
+        window.location.reload();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!postId) {
+        alert('잘못된 접근입니다.');
+        window.location.href = 'community.html';
+        return;
+      }
+      // Initial load attempt without password
+      tryLoadPost("");
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회사 소개 - VoyageLuxe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .about-hero {
+      text-align: center;
+      padding: 6rem 1rem;
+      background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(248,250,252,1) 100%);
+    }
+
+    .about-title {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--color-navy);
+      margin-bottom: var(--spacing-6);
+      line-height: 1.2;
+      letter-spacing: -1px;
+    }
+
+    .about-desc {
+      font-size: 1.25rem;
+      color: var(--color-text-muted);
+      line-height: 1.8;
+      max-width: 800px;
+      margin: 0 auto;
+      word-break: keep-all;
+    }
+
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-8);
+      margin-top: 5rem;
+      margin-bottom: 5rem;
+    }
+
+    .value-card {
+      background: var(--color-surface);
+      padding: var(--spacing-8);
+      border-radius: var(--border-radius-xl);
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+      border: 1px solid var(--color-border);
+    }
+
+    .value-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--color-primary);
+    }
+
+    .value-icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-4);
+      display: inline-block;
+      padding: 1.5rem;
+      background: #f1f5f9;
+      border-radius: 50%;
+    }
+
+    .value-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-navy);
+      margin-bottom: var(--spacing-2);
+    }
+
+    .value-text {
+      color: var(--color-text-muted);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .value-grid { grid-template-columns: 1fr; }
+      .about-title { font-size: 2rem; }
+      .about-desc { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body style="background-color: var(--color-surface);">
+
+  <site-header></site-header>
+
+  <main class="animate-fade-in">
+    <section class="about-hero">
+      <div class="container">
+        <h1 class="about-title">당신의 완벽한 휴식을 설계합니다,<br><span style="color: var(--color-primary);">Voyage Luxe</span></h1>
+        <p class="about-desc">
+          Voyage Luxe는 단순한 여행을 넘어, 당신의 삶에 깊은 영감을 주는 프리미엄 여정을 큐레이션 합니다. 전 세계 숨겨진 보석 같은 명소부터 최고급 하이엔드 리조트까지, 타협하지 않는 퀄리티와 세심한 1:1 맞춤 서비스로 가장 빛나는 순간을 선사합니다.
+        </p>
+      </div>
+    </section>
+
+    <section class="container" style="padding-bottom: 6rem;">
+      <div class="value-grid">
+        
+        <div class="value-card">
+          <div class="value-icon">💎</div>
+          <h3 class="value-title">엄선된 프리미엄<br><span style="font-size: 0.875rem; color: #64748b; font-weight: 500;">(Curated Luxury)</span></h3>
+          <p class="value-text">상위 1%의 숙소와 일정</p>
+        </div>
+
+        <div class="value-card">
+          <div class="value-icon">🗺️</div>
+          <h3 class="value-title">프라이빗 맞춤 설계<br><span style="font-size: 0.875rem; color: #64748b; font-weight: 500;">(Private Tailoring)</span></h3>
+          <p class="value-text">오직 당신만을 위한 동선</p>
+        </div>
+
+        <div class="value-card">
+          <div class="value-icon">🕰️</div>
+          <h3 class="value-title">전담 컨시어지<br><span style="font-size: 0.875rem; color: #64748b; font-weight: 500;">(24/7 Care)</span></h3>
+          <p class="value-text">여행의 시작부터 끝까지 완벽한 케어</p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <site-footer></site-footer>
+
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
